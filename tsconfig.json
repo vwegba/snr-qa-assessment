@@ -1,8 +1,8 @@
-    {
+{
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -14,6 +14,8 @@
     "playwright.config.ts",
     "data/**/*.ts",
     "pages/**/*.ts",
+    "database/**/*.ts",
+    "prisma7.config.ts",
     "tests/**/*.ts"
   ]
 }

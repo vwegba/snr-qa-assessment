@@ -1,27 +1,70 @@
 name: Playwright Tests
+
 on:
   push:
-    branches: [main, master]
   pull_request:
-    branches: [main, master]
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version-file: '.nvmrc'
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Create .env from safe local-development defaults
+        run: |
+          cat <<'EOF' > .env
+          BASE_URL=https://demoqa.com
+          MYSQL_DATABASE=qa_assessment
+          MYSQL_USER=qa_user
+          MYSQL_PASSWORD=qa_password
+          MYSQL_ROOT_PASSWORD=root_password
+          DATABASE_URL=mysql://qa_user:qa_password@localhost:3306/qa_assessment
+          WIREMOCK_BASE_URL=http://localhost:8080
+          EOF
+
+      - name: Generate Prisma Client
+        run: npx prisma generate --config prisma7.config.ts
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript checks
+        run: npm run typecheck
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
-        run: npx playwright test
+
+      - name: Start Docker services
+        run: docker compose up -d --wait --wait-timeout 120
+
+      - name: Seed database
+        run: npm run db:seed
+
+      - name: Run all suites
+        run: npm run test:e2e
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      - name: Show Docker service status
+        if: always()
+        run: docker compose ps -a
+
+      - name: Stop Docker services
+        if: always()
+        run: docker compose down --volumes

@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/recommendations",
+    "queryParameters": {
+      "userId": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "userId": 1,
+      "book": {
+        "isbn": "9781492053743",
+        "title": "Learning TypeScript"
+      }
+    }
+  }
+}

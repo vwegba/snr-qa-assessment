@@ -2,9 +2,14 @@ import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 
 const baseURL = process.env.BASE_URL;
+const wireMockBaseURL = process.env.WIREMOCK_BASE_URL;
 
 if (!baseURL) {
   throw new Error('BASE_URL is missing. Copy .env.example to .env.');
+}
+
+if (!wireMockBaseURL) {
+  throw new Error('WIREMOCK_BASE_URL is missing. Copy .env.example to .env.');
 }
 /**
  * Read environment variables from file.
@@ -44,16 +49,19 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testMatch: '**/ui/**/*.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
+      testMatch: '**/ui/**/*.spec.ts',
       use: { ...devices['Desktop Firefox'] },
     },
 
     {
       name: 'webkit',
+      testMatch: '**/ui/**/*.spec.ts',
       use: { ...devices['Desktop Safari'] },
     },
 
@@ -64,7 +72,21 @@ export default defineConfig({
     // },
     {
       name: 'Mobile Safari',
+      testMatch: '**/ui/**/*.spec.ts',
       use: { ...devices['iPhone 12'] },
+    },
+
+    {
+      name: 'database',
+      testMatch: '**/database/**/*.spec.ts',
+    },
+
+    {
+      name: 'api',
+      testMatch: '**/api/**/*.spec.ts',
+      use: {
+        baseURL: wireMockBaseURL,
+      },
     },
 
     /* Test against branded browsers. */

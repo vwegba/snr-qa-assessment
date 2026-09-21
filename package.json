@@ -8,12 +8,19 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "seed:users": "tsx database/seeds/seed-users.ts",
+    "test:ui": "PLAYWRIGHT_HTML_OUTPUT_DIR=playwright-report/ui playwright test --project=chromium --project=firefox --project=webkit --project=\"Mobile Safari\"",
+    "test:database": "PLAYWRIGHT_HTML_OUTPUT_DIR=playwright-report/database playwright test --project=database",
+    "test:api": "PLAYWRIGHT_HTML_OUTPUT_DIR=playwright-report/api playwright test --project=api",
+    "test:e2e": "npm run test:ui && npm run test:database && npm run test:api",
+    "db:seed:roles": "docker compose exec -T mysql sh -c 'MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql -u\"$MYSQL_USER\" \"$MYSQL_DATABASE\"' < database/seeds/seed-roles.sql",
+    "db:seed": "npm run db:seed:roles && npm run seed:users"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
@@ -22,7 +29,17 @@
     "eslint": "^10.11.0",
     "husky": "^9.1.7",
     "prettier": "3.9.8",
+    "prisma": "7.10.0",
+    "tsx": "4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0"
+  },
+  "allowScripts": {
+    "prisma@7.10.0": true,
+    "@prisma/engines@7.10.0": true
+  },
+  "dependencies": {
+    "@prisma/adapter-mariadb": "7.10.0",
+    "@prisma/client": "7.10.0"
   }
 }
