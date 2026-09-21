@@ -51,10 +51,6 @@ export class BooksPage {
     await this.page.goto(booksPageData.path);
   }
 
-  async searchBooks(term: string): Promise<void> {
-    await this.searchInput.fill(term);
-  }
-
   async openSidebarIfNeeded(): Promise<void> {
     const menuToggle = this.page
       .locator('nav.left-menu-nav-bar')

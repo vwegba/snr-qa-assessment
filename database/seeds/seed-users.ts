@@ -53,6 +53,17 @@ const roleAssignments = users.flatMap((user, index) => {
     ];
   }
 
+  if (userNumber % 4 === 0) {
+    return [
+      { appuser_id: user.id, role_id: 1n },
+      { appuser_id: user.id, role_id: 2n },
+    ];
+  }
+
+  if (userNumber % 3 === 0) {
+    return [{ appuser_id: user.id, role_id: 1n }];
+  }
+
   if (userNumber % 2 === 0) {
     return [{ appuser_id: user.id, role_id: 2n }];
   }

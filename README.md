@@ -53,7 +53,7 @@ Run these commands from the project root.
    npm run db:seed
    ```
 
-The seed commands are repeatable. Running them again updates or recreates the same test data instead of adding unwanted duplicates.
+The seed commands are repeatable. Running them again updates or recreates the same test data instead of adding unwanted duplicates. The users include one-role, two-role, and three-role examples.
 
 ## Run the tests
 
@@ -110,7 +110,7 @@ npx playwright show-report playwright-report/database
 npx playwright show-report playwright-report/api
 ```
 
-The database report includes a `users-with-roles.json` attachment containing the rows returned by the JOIN query. The UI report includes screenshots of the Books page and the expanded sidebar.
+The database report includes a `users-with-roles.json` attachment containing the rows returned by the JOIN query. The UI report includes screenshots of the Books page and the expanded sidebar. CI also uploads `test-results/`, which preserves traces and other failure evidence separately for each suite.
 
 ## Architecture and reasons for the design
 
@@ -155,7 +155,7 @@ The following choices were made where the required behaviour was not fully defin
 - The public DemoQA website is not connected to the local MySQL database or WireMock. “Interact with each other” is treated as coordinated UI, database, and API suites in one Playwright framework, run in order by one command.
 - “Visual check” is treated as checking the required visible page elements and saving screenshots as evidence. It is not a pixel-by-pixel screenshot comparison.
 - “Using a JOIN via Prisma” could mean a Prisma relationship query or raw SQL. The database test uses an explicit SQL `INNER JOIN` through Prisma so the JOIN is clear.
-- The required database assertions were not listed. The test checks for 20 unique users, 28 user-role rows, the three expected role names, and all three roles for users 5, 10, 15, and 20.
+- The required database assertions were not listed. The test checks for 20 unique users, 32 user-role rows, the three expected role names, examples with one and two roles, and all three roles for users 5, 10, 15, and 20.
 
 ## Known limitations
 
@@ -164,6 +164,7 @@ The following choices were made where the required behaviour was not fully defin
 - The Mobile Safari project is Playwright WebKit with an iPhone 12 device profile. It is not the Safari application on a physical iPhone.
 - MySQL uses local port `3306`, and WireMock uses local port `8080`. Both ports must be free before Docker starts.
 - The usernames and passwords in `.env.example` are sample local values. They must not be used for a real system.
+- The npm scripts use POSIX shell syntax and are intended for macOS, Linux, and the Ubuntu GitHub Actions runner. They do not run unchanged in Windows Command Prompt or PowerShell.
 
 ## Stop the local services
 

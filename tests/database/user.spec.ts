@@ -61,7 +61,7 @@ test('returns all seeded users and their roles through a JOIN', async () => {
   const actualRoleNames = new Set(rows.map((row) => row.roleName));
 
   expect(uniqueUserIds.size).toBe(20);
-  expect(rows).toHaveLength(28);
+  expect(rows).toHaveLength(32);
   expect([...actualRoleNames].sort()).toEqual([
     'Editor',
     'ReadOnly',
@@ -76,4 +76,15 @@ test('returns all seeded users and their roles through a JOIN', async () => {
 
     expect(userRoles).toEqual(['Editor', 'ReadOnly', 'Superuser']);
   }
+
+  const twoRoleUser = rows
+    .filter((row) => row.userId === 4n)
+    .map((row) => row.roleName)
+    .sort();
+  expect(twoRoleUser).toEqual(['Editor', 'Superuser']);
+
+  const superuserOnly = rows
+    .filter((row) => row.userId === 3n)
+    .map((row) => row.roleName);
+  expect(superuserOnly).toEqual(['Superuser']);
 });
